@@ -16,11 +16,16 @@
     --urgent: #FF5722; --vp: #5C6BC0;
   }
   body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; }
-
   .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
   .header h1 { font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 600; }
+  .header-right { display: flex; align-items: center; gap: 10px; }
   .today-badge { background: var(--accent); color: white; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
-
+  .sync-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; flex-shrink: 0; }
+  .sync-dot.ok { background: #4CAF50; }
+  .sync-dot.loading { background: var(--accent); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
   .rollover-banner { background: #FFF3E0; border: 1.5px solid #FFB74D; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .rollover-banner .rb-text { font-size: 13px; }
   .rollover-banner .rb-text b { color: var(--orange); }
@@ -28,13 +33,11 @@
   .rb-btns button { padding: 7px 14px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; }
   .rb-ok { background: var(--orange); color: white; }
   .rb-no { background: none !important; color: var(--text3) !important; border: 1px solid var(--border) !important; }
-
   .layout { display: grid; grid-template-columns: 270px 1fr; gap: 16px; max-width: 1060px; margin: 0 auto; }
   @media(max-width:720px){ .layout { grid-template-columns: 1fr; } }
   .left-col { display: flex; flex-direction: column; gap: 16px; }
   .main-area { display: flex; flex-direction: column; gap: 16px; }
   .card { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-
   .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .cal-header .month-name { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
   .cal-nav { display: flex; gap: 4px; }
@@ -50,7 +53,6 @@
   .cal-day.has-tasks::after { content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%); width:4px; height:4px; border-radius:50%; background:var(--accent); }
   .cal-day.today.has-tasks::after, .cal-day.selected.has-tasks::after { background:white; }
   .cal-day.has-overdue::after { background: var(--red) !important; }
-
   .sec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .sec-header h2 { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600; }
   .btn-sm { padding: 4px 10px; background: none; border: 1.5px dashed var(--border); border-radius: 7px; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 11px; color: var(--text3); transition: all 0.15s; }
@@ -66,18 +68,15 @@
   .sticker.c0{background:#FFF4CC;border-color:#E8D078;} .sticker.c1{background:#E8F5EC;border-color:#7BC47F;}
   .sticker.c2{background:#E8F0FD;border-color:#90A8E8;} .sticker.c3{background:#FDE8E8;border-color:#E89090;}
   .sticker.c4{background:#F3E8FD;border-color:#C890E8;}
-
   .flag { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.3px; }
   .flag.urgent { background: var(--urgent); color: white; }
   .flag.vp { background: var(--vp); color: white; }
-
   .tasks-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
   .tasks-top h2 { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 600; }
   .date-nav { display: flex; align-items: center; gap: 6px; }
   .date-nav button { background: none; border: 1px solid var(--border); width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text2); transition: all 0.15s; }
   .date-nav button:hover { background: var(--bg); }
   .date-label { font-size: 12px; color: var(--text2); font-weight: 500; min-width: 130px; text-align: center; }
-
   .task-input-wrap { margin-bottom: 14px; }
   .task-input-row { display: flex; gap: 8px; margin-bottom: 6px; }
   .task-input-row input { flex: 1; padding: 9px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--text); outline: none; transition: border-color 0.15s; }
@@ -85,15 +84,13 @@
   .task-input-row input::placeholder { color: var(--text3); }
   .task-flags-row { display: flex; gap: 6px; align-items: center; padding: 0 2px; }
   .task-flags-row .hint { font-size: 11px; color: var(--text3); margin-left: auto; }
-  .flag-toggle { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s; letter-spacing: 0.3px; }
+  .flag-toggle { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s; }
   .flag-toggle.urgent-toggle { background: #FFF0EC; color: var(--urgent); border-color: #FFCCBB; }
   .flag-toggle.urgent-toggle.active { background: var(--urgent); color: white; border-color: var(--urgent); }
   .flag-toggle.vp-toggle { background: #ECEFFE; color: var(--vp); border-color: #C5CAF0; }
   .flag-toggle.vp-toggle.active { background: var(--vp); color: white; border-color: var(--vp); }
-
   .group-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text3); margin: 8px 0 6px; }
   .group-lbl.red { color: var(--red); }
-
   .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px; margin-bottom: 5px; border-left: 3px solid var(--accent); background: #FFFBF0; transition: box-shadow 0.15s; }
   .task-item.overdue { border-left-color: var(--red); background: #FFF5F5; }
   .task-item.is-urgent { border-left-color: var(--urgent); background: #FFF5F2; }
@@ -110,7 +107,6 @@
   .task-item:hover .task-del { opacity: 1; }
   .task-del:hover { color: #e05; }
   .empty-msg { color: var(--text3); font-size: 12px; padding: 6px 0; }
-
   .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-bottom: 12px; }
   .note-card { border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.5; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; border: 1px solid; position: relative; }
   .note-card.c0{background:#FFF4CC;border-color:#E8D078;} .note-card.c1{background:#E8F5EC;border-color:#7BC47F;}
@@ -122,7 +118,6 @@
   .note-preview { color: rgba(0,0,0,0.6); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; }
   .note-del { position: absolute; top: 6px; right: 6px; opacity: 0; background: none; border: none; cursor: pointer; font-size: 14px; color: rgba(0,0,0,0.4); transition: opacity 0.15s; }
   .note-card:hover .note-del { opacity: 1; }
-
   .note-input-area { background: var(--bg); border-radius: 12px; padding: 14px; border: 1.5px solid var(--border); transition: border-color 0.15s; }
   .note-input-area:focus-within { border-color: var(--accent); }
   .note-title-input { width: 100%; background: none; border: none; outline: none; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
@@ -137,7 +132,6 @@
   .save-btn { padding: 7px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; transition: background 0.15s; }
   .save-btn:hover { background: var(--accent2); }
   .input-hint { font-size: 10px; color: var(--text3); margin-top: 5px; }
-
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: var(--radius); padding: 26px; width: 440px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
@@ -157,12 +151,16 @@
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>Мой рабочий планер</h1>
-  <span class="today-badge" id="todayBadge"></span>
+  <div class="header-right">
+    <div class="sync-status">
+      <div class="sync-dot loading" id="syncDot"></div>
+      <span id="syncLabel">Подключение...</span>
+    </div>
+    <span class="today-badge" id="todayBadge"></span>
+  </div>
 </div>
-
 <div class="rollover-banner" id="rolloverBanner" style="display:none">
   <div class="rb-text">⚠️ Есть <b id="rolloverCount">0</b> невыполненных задач из прошлых дней</div>
   <div class="rb-btns">
@@ -170,7 +168,6 @@
     <button class="rb-ok" onclick="doRollover()">Перенести на сегодня</button>
   </div>
 </div>
-
 <div class="layout">
   <div class="left-col">
     <div class="card">
@@ -183,7 +180,6 @@
       </div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
-
     <div class="card">
       <div class="sec-header">
         <h2>Стикеры</h2>
@@ -194,7 +190,6 @@
       </div>
     </div>
   </div>
-
   <div class="main-area">
     <div class="card">
       <div class="tasks-top">
@@ -217,29 +212,27 @@
       </div>
       <div id="tasksList"></div>
     </div>
-
-    <div class="card">
-      <div class="sec-header" style="margin-bottom:12px">
-        <h2>Заметки</h2>
+<div class="card">
+  <div class="sec-header" style="margin-bottom:12px">
+    <h2>Заметки</h2>
+  </div>
+  <div class="notes-grid" id="notesList"></div>
+  <div class="note-input-area">
+    <input class="note-title-input" id="noteTitleInput" placeholder="Заголовок заметки..." onkeydown="handleNoteKey(event)">
+    <textarea class="note-body-input" id="noteBodyInput" placeholder="Текст заметки..." onkeydown="handleNoteKey(event)"></textarea>
+    <div class="note-input-bottom">
+      <div class="note-left-controls">
+        <div class="note-color-row" id="noteColorRow"></div>
+        <div class="flag-toggle urgent-toggle" id="noteUrgentToggle" onclick="toggleNoteFlag('urgent')">🔥 Важное</div>
+        <div class="flag-toggle vp-toggle" id="noteVpToggle" onclick="toggleNoteFlag('vp')">👤 ВП</div>
       </div>
-      <div class="notes-grid" id="notesList"></div>
-      <div class="note-input-area">
-        <input class="note-title-input" id="noteTitleInput" placeholder="Заголовок заметки..." onkeydown="handleNoteKey(event)">
-        <textarea class="note-body-input" id="noteBodyInput" placeholder="Текст заметки..." onkeydown="handleNoteKey(event)"></textarea>
-        <div class="note-input-bottom">
-          <div class="note-left-controls">
-            <div class="note-color-row" id="noteColorRow"></div>
-            <div class="flag-toggle urgent-toggle" id="noteUrgentToggle" onclick="toggleNoteFlag('urgent')">🔥 Важное</div>
-            <div class="flag-toggle vp-toggle" id="noteVpToggle" onclick="toggleNoteFlag('vp')">👤 ВП</div>
-          </div>
-          <button class="save-btn" onclick="addNote()">Сохранить</button>
-        </div>
-        <div class="input-hint">Ctrl+Enter чтобы сохранить заметку</div>
-      </div>
+      <button class="save-btn" onclick="addNote()">Сохранить</button>
     </div>
+    <div class="input-hint">Ctrl+Enter чтобы сохранить заметку</div>
   </div>
 </div>
-
+  </div>
+</div>
 <div class="modal-overlay" id="stickerModal">
   <div class="modal">
     <h3 id="stModalTitle">Новый стикер</h3>
@@ -253,7 +246,6 @@
     </div>
   </div>
 </div>
-
 <div class="modal-overlay" id="noteModal">
   <div class="modal">
     <h3>Редактировать заметку</h3>
@@ -267,224 +259,99 @@
     </div>
   </div>
 </div>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-let tasks    = JSON.parse(localStorage.getItem('p_tasks')    || '{}');
-let notes    = JSON.parse(localStorage.getItem('p_notes')    || '[]');
-let stickers = JSON.parse(localStorage.getItem('p_stickers') || '[]');
+const firebaseConfig = {
+  apiKey: "AIzaSyAD19KJ1-d69v0nhWMhO69nNmsVMTX-faI",
+  authDomain: "my-planer-f8bbd.firebaseapp.com",
+  projectId: "my-planer-f8bbd",
+  storageBucket: "my-planer-f8bbd.firebasestorage.app",
+  messagingSenderId: "201703710433",
+  appId: "1:201703710433:web:03a3d16bf64c65e84c21a0"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-let selectedDate = new Date();
-let calDate      = new Date();
-let editNoteId   = null;
-let editStIdx    = null;
-let stColor      = 0;
-let noteColor    = 0;
-let rolloverPending = [];
+let tasks={}, notes=[], stickers=[];
+let selectedDate=new Date(), calDate=new Date();
+let editNoteId=null, editStIdx=null, stColor=0, noteColor=0, rolloverPending=[];
+let newTaskFlags={urgent:false,vp:false}, newNoteFlags={urgent:false,vp:false};
+let editNoteColor=0, editNoteFlags={urgent:false,vp:false}, stFlags={urgent:false,vp:false};
+const COLORS=['#D4A853','#4CAF50','#3D6FE8','#E53935','#9C27B0'];
 
-let newTaskFlags = { urgent: false, vp: false };
-let newNoteFlags = { urgent: false, vp: false };
-let editNoteColor = 0;
-let editNoteFlags = { urgent: false, vp: false };
-let stFlags = { urgent: false, vp: false };
+function setSyncStatus(state,text){document.getElementById('syncDot').className='sync-dot '+state;document.getElementById('syncLabel').textContent=text;}
+async function fbSave(col,id,data){try{await db.collection(col).doc(id).set(data);setSyncStatus('ok','Сохранено');}catch(e){setSyncStatus('error','Ошибка');}}
+async function fbDelete(col,id){try{await db.collection(col).doc(id).delete();}catch(e){}}
 
-const COLORS = ['#D4A853','#4CAF50','#3D6FE8','#E53935','#9C27B0'];
-
-function save(){ localStorage.setItem('p_tasks',JSON.stringify(tasks)); localStorage.setItem('p_notes',JSON.stringify(notes)); localStorage.setItem('p_stickers',JSON.stringify(stickers)); }
-function dk(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function parsedk(k){ const [y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d); }
-function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function fmtDate(d){
-  const days=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
-  const mon=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  const t=new Date(); t.setHours(0,0,0,0); const x=new Date(d); x.setHours(0,0,0,0);
-  const diff=Math.round((x-t)/86400000);
-  if(diff===0) return `Сегодня, ${d.getDate()} ${mon[d.getMonth()]}`;
-  if(diff===1) return `Завтра, ${d.getDate()} ${mon[d.getMonth()]}`;
-  if(diff===-1) return `Вчера, ${d.getDate()} ${mon[d.getMonth()]}`;
-  return `${days[d.getDay()]}, ${d.getDate()} ${mon[d.getMonth()]}`;
-}
-function fmtShort(k){ const [,m,d]=k.split('-').map(Number); const mon=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек']; return `${d} ${mon[m-1]}`; }
-function fmtMonth(d){ const mon=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']; return mon[d.getMonth()]+' '+d.getFullYear(); }
-
-function renderHeader(){
-  const d=new Date(), days=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'], mon=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  const s=days[d.getDay()]; document.getElementById('todayBadge').textContent=s.charAt(0).toUpperCase()+s.slice(1)+', '+d.getDate()+' '+mon[d.getMonth()];
+async function loadAll(){
+  setSyncStatus('loading','Загрузка...');
+  try{
+    const tSnap=await db.collection('tasks').get();
+    tasks={};
+    tSnap.forEach(doc=>{const d=doc.data();if(!tasks[d.dateKey])tasks[d.dateKey]=[];tasks[d.dateKey].push({...d,id:doc.id});});
+    const nSnap=await db.collection('notes').orderBy('createdAt','desc').get();
+    notes=[];nSnap.forEach(doc=>notes.push({...doc.data(),id:doc.id}));
+    const sSnap=await db.collection('stickers').orderBy('createdAt','desc').get();
+    stickers=[];sSnap.forEach(doc=>stickers.push({...doc.data(),id:doc.id}));
+    setSyncStatus('ok','Синхронизировано');
+    checkRollover();renderCalendar();renderTasks();renderNotes();renderStickers();
+  }catch(e){setSyncStatus('error','Ошибка загрузки');}
 }
 
-function toggleTaskFlag(f){
-  newTaskFlags[f]=!newTaskFlags[f];
-  document.getElementById('taskUrgentToggle').className='flag-toggle urgent-toggle'+(newTaskFlags.urgent?' active':'');
-  document.getElementById('taskVpToggle').className='flag-toggle vp-toggle'+(newTaskFlags.vp?' active':'');
-}
-function toggleNoteFlag(f){
-  newNoteFlags[f]=!newNoteFlags[f];
-  document.getElementById('noteUrgentToggle').className='flag-toggle urgent-toggle'+(newNoteFlags.urgent?' active':'');
-  document.getElementById('noteVpToggle').className='flag-toggle vp-toggle'+(newNoteFlags.vp?' active':'');
-}
-function makeFlagHtml(flags){
-  let h='';
-  if(flags?.urgent) h+=`<span class="flag urgent">🔥 Важное</span>`;
-  if(flags?.vp) h+=`<span class="flag vp">👤 ВП</span>`;
-  return h ? `<div class="nflags">${h}</div>` : '';
-}
-function makeTaskFlagHtml(flags){
-  let h='';
-  if(flags?.urgent) h+=`<span class="flag urgent">🔥</span>`;
-  if(flags?.vp) h+=`<span class="flag vp">ВП</span>`;
-  return h;
-}
+function dk(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parsedk(k){const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2);}
+function fmtDate(d){const days=['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],mon=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];const t=new Date();t.setHours(0,0,0,0);const x=new Date(d);x.setHours(0,0,0,0);const diff=Math.round((x-t)/86400000);if(diff===0)return`Сегодня, ${d.getDate()} ${mon[d.getMonth()]}`;if(diff===1)return`Завтра, ${d.getDate()} ${mon[d.getMonth()]}`;if(diff===-1)return`Вчера, ${d.getDate()} ${mon[d.getMonth()]}`;return`${days[d.getDay()]}, ${d.getDate()} ${mon[d.getMonth()]}`;}
+function fmtShort(k){const [,m,d]=k.split('-').map(Number);const mon=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];return`${d} ${mon[m-1]}`;}
+function fmtMonth(d){const mon=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];return mon[d.getMonth()]+' '+d.getFullYear();}
+function renderHeader(){const d=new Date(),days=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],mon=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];const s=days[d.getDay()];document.getElementById('todayBadge').textContent=s.charAt(0).toUpperCase()+s.slice(1)+', '+d.getDate()+' '+mon[d.getMonth()];}
 
-function checkRollover(){
-  const todayKey=dk(new Date()), today=new Date(); today.setHours(0,0,0,0); rolloverPending=[];
-  Object.keys(tasks).forEach(key=>{ if(key===todayKey) return; const d=parsedk(key); d.setHours(0,0,0,0); if(d<today) tasks[key].filter(t=>!t.done).forEach(t=>rolloverPending.push({...t,fromDate:key})); });
-  const b=document.getElementById('rolloverBanner');
-  if(rolloverPending.length){ document.getElementById('rolloverCount').textContent=rolloverPending.length; b.style.display='flex'; } else b.style.display='none';
-}
-function doRollover(){
-  const todayKey=dk(new Date()); if(!tasks[todayKey]) tasks[todayKey]=[];
-  rolloverPending.forEach(t=>{ if(tasks[t.fromDate]) tasks[t.fromDate]=tasks[t.fromDate].filter(x=>x.id!==t.id); tasks[todayKey].push({id:Date.now()+Math.random(),text:t.text,done:false,overdue:true,fromDate:t.fromDate,flags:t.flags||{}}); });
-  rolloverPending=[]; save(); document.getElementById('rolloverBanner').style.display='none'; renderCalendar(); renderTasks();
-}
-function dismissRollover(){ document.getElementById('rolloverBanner').style.display='none'; rolloverPending=[]; }
+function toggleTaskFlag(f){newTaskFlags[f]=!newTaskFlags[f];document.getElementById('taskUrgentToggle').className='flag-toggle urgent-toggle'+(newTaskFlags.urgent?' active':'');document.getElementById('taskVpToggle').className='flag-toggle vp-toggle'+(newTaskFlags.vp?' active':'');}
+function toggleNoteFlag(f){newNoteFlags[f]=!newNoteFlags[f];document.getElementById('noteUrgentToggle').className='flag-toggle urgent-toggle'+(newNoteFlags.urgent?' active':'');document.getElementById('noteVpToggle').className='flag-toggle vp-toggle'+(newNoteFlags.vp?' active':'');}
+function makeFlagHtml(flags){let h='';if(flags?.urgent)h+=`<span class="flag urgent">🔥 Важное</span>`;if(flags?.vp)h+=`<span class="flag vp">👤 ВП</span>`;return h?`<div class="nflags">${h}</div>`:'';}
+function makeTaskFlagHtml(flags){let h='';if(flags?.urgent)h+=`<span class="flag urgent">🔥</span>`;if(flags?.vp)h+=`<span class="flag vp">ВП</span>`;return h;}
 
-function renderCalendar(){
-  document.getElementById('monthName').textContent=fmtMonth(calDate);
-  const grid=document.getElementById('calGrid'); grid.innerHTML='';
-  ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d=>{ const el=document.createElement('div'); el.className='cal-dow'; el.textContent=d; grid.appendChild(el); });
-  const yr=calDate.getFullYear(),mo=calDate.getMonth(); let sd=new Date(yr,mo,1).getDay(); sd=sd===0?6:sd-1;
-  const dim=new Date(yr,mo+1,0).getDate(),pd=new Date(yr,mo,0).getDate();
-  const today=new Date(); today.setHours(0,0,0,0); const sel=new Date(selectedDate); sel.setHours(0,0,0,0);
-  for(let i=0;i<sd;i++) addCDay(grid,new Date(yr,mo-1,pd-sd+1+i),true,today,sel);
-  for(let i=1;i<=dim;i++) addCDay(grid,new Date(yr,mo,i),false,today,sel);
-  const rem=(7-(sd+dim)%7)%7; for(let i=1;i<=rem;i++) addCDay(grid,new Date(yr,mo+1,i),true,today,sel);
-}
-function addCDay(grid,d,other,today,sel){
-  const el=document.createElement('div'); el.className='cal-day'; if(other) el.classList.add('other-month');
-  const dd=new Date(d); dd.setHours(0,0,0,0);
-  if(dd.getTime()===today.getTime()) el.classList.add('today');
-  if(dd.getTime()===sel.getTime()) el.classList.add('selected');
-  const key=dk(d),dt=tasks[key]||[];
-  if(dt.length){ const ho=dt.some(t=>!t.done&&dd<today); el.classList.add(ho?'has-overdue':'has-tasks'); }
-  el.textContent=d.getDate();
-  el.onclick=()=>{ selectedDate=new Date(d); renderCalendar(); renderTasks(); document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate); };
-  grid.appendChild(el);
-}
-function changeMonth(dir){ calDate.setMonth(calDate.getMonth()+dir); renderCalendar(); }
-function changeDay(dir){ selectedDate.setDate(selectedDate.getDate()+dir); calDate=new Date(selectedDate); renderCalendar(); renderTasks(); document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate); }
+function checkRollover(){const todayKey=dk(new Date()),today=new Date();today.setHours(0,0,0,0);rolloverPending=[];Object.keys(tasks).forEach(key=>{if(key===todayKey)return;const d=parsedk(key);d.setHours(0,0,0,0);if(d<today)tasks[key].filter(t=>!t.done).forEach(t=>rolloverPending.push({...t,fromDate:key}));});const b=document.getElementById('rolloverBanner');if(rolloverPending.length){document.getElementById('rolloverCount').textContent=rolloverPending.length;b.style.display='flex';}else b.style.display='none';}
+async function doRollover(){const todayKey=dk(new Date());if(!tasks[todayKey])tasks[todayKey]=[];for(const t of rolloverPending){if(tasks[t.fromDate])tasks[t.fromDate]=tasks[t.fromDate].filter(x=>x.id!==t.id);await fbDelete('tasks',t.id);const newId=uid();const newTask={id:newId,text:t.text,done:false,overdue:true,fromDate:t.fromDate,flags:t.flags||{},dateKey:todayKey,createdAt:Date.now()};tasks[todayKey].push(newTask);await fbSave('tasks',newId,newTask);}rolloverPending=[];document.getElementById('rolloverBanner').style.display='none';renderCalendar();renderTasks();}
+function dismissRollover(){document.getElementById('rolloverBanner').style.display='none';rolloverPending=[];}
 
-function addTask(){
-  const inp=document.getElementById('taskInput'), text=inp.value.trim(); if(!text) return;
-  const key=dk(selectedDate); if(!tasks[key]) tasks[key]=[];
-  tasks[key].push({id:Date.now(),text,done:false,overdue:false,flags:{...newTaskFlags}});
-  inp.value='';
-  newTaskFlags={urgent:false,vp:false};
-  document.getElementById('taskUrgentToggle').className='flag-toggle urgent-toggle';
-  document.getElementById('taskVpToggle').className='flag-toggle vp-toggle';
-  save(); renderTasks(); renderCalendar();
-}
-function toggleTask(key,id){ const t=tasks[key]?.find(t=>t.id===id); if(!t) return; t.done=!t.done; save(); renderTasks(); }
-function deleteTask(key,id){ tasks[key]=(tasks[key]||[]).filter(t=>t.id!==id); save(); renderTasks(); renderCalendar(); }
-function renderTasks(){
-  const key=dk(selectedDate),el=document.getElementById('tasksList'),all=tasks[key]||[];
-  if(!all.length){el.innerHTML='<div class="empty-msg">Задач нет — введите и нажмите Enter!</div>';return;}
-  el.innerHTML='';
-  const ov=all.filter(t=>t.overdue&&!t.done), reg=all.filter(t=>!t.overdue);
-  if(ov.length){ const l=document.createElement('div'); l.className='group-lbl red'; l.textContent='⚠️ Не выполнено с прошлых дней'; el.appendChild(l); ov.forEach(t=>el.appendChild(mkTask(key,t))); if(reg.length){const l2=document.createElement('div');l2.className='group-lbl';l2.textContent='На сегодня';el.appendChild(l2);} }
-  reg.forEach(t=>el.appendChild(mkTask(key,t)));
-}
-function mkTask(key,t){
-  const flags=t.flags||{};
-  let cls='task-item';
-  if(t.overdue&&!t.done) cls+=' overdue';
-  else if(flags.urgent) cls+=' is-urgent';
-  else if(flags.vp) cls+=' is-vp';
-  const div=document.createElement('div'); div.className=cls;
-  const cb=document.createElement('div'); cb.className='task-cb'+(t.done?' done':''); cb.innerHTML=t.done?'✓':''; cb.onclick=()=>toggleTask(key,t.id);
-  const info=document.createElement('div'); info.className='task-info';
-  const topRow=document.createElement('div'); topRow.className='task-top-row';
-  const span=document.createElement('span'); span.className='task-text'+(t.done?' done':''); span.textContent=t.text; topRow.appendChild(span);
-  const fh=makeTaskFlagHtml(flags); if(fh){ const tmp=document.createElement('div'); tmp.innerHTML=fh; Array.from(tmp.children).forEach(c=>topRow.appendChild(c)); }
-  info.appendChild(topRow);
-  if(t.overdue&&t.fromDate){const b=document.createElement('div');b.className='task-from';b.textContent='Было: '+fmtShort(t.fromDate);info.appendChild(b);}
-  const del=document.createElement('button'); del.className='task-del'; del.innerHTML='×'; del.onclick=()=>deleteTask(key,t.id);
-  div.appendChild(cb); div.appendChild(info); div.appendChild(del); return div;
-}
+function renderCalendar(){document.getElementById('monthName').textContent=fmtMonth(calDate);const grid=document.getElementById('calGrid');grid.innerHTML='';['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].forEach(d=>{const el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el);});const yr=calDate.getFullYear(),mo=calDate.getMonth();let sd=new Date(yr,mo,1).getDay();sd=sd===0?6:sd-1;const dim=new Date(yr,mo+1,0).getDate(),pd=new Date(yr,mo,0).getDate();const today=new Date();today.setHours(0,0,0,0);const sel=new Date(selectedDate);sel.setHours(0,0,0,0);for(let i=0;i<sd;i++)addCDay(grid,new Date(yr,mo-1,pd-sd+1+i),true,today,sel);for(let i=1;i<=dim;i++)addCDay(grid,new Date(yr,mo,i),false,today,sel);const rem=(7-(sd+dim)%7)%7;for(let i=1;i<=rem;i++)addCDay(grid,new Date(yr,mo+1,i),true,today,sel);}
+function addCDay(grid,d,other,today,sel){const el=document.createElement('div');el.className='cal-day';if(other)el.classList.add('other-month');const dd=new Date(d);dd.setHours(0,0,0,0);if(dd.getTime()===today.getTime())el.classList.add('today');if(dd.getTime()===sel.getTime())el.classList.add('selected');const key=dk(d),dt=tasks[key]||[];if(dt.length){const ho=dt.some(t=>!t.done&&dd<today);el.classList.add(ho?'has-overdue':'has-tasks');}el.textContent=d.getDate();el.onclick=()=>{selectedDate=new Date(d);renderCalendar();renderTasks();document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate);};grid.appendChild(el);}
+function changeMonth(dir){calDate.setMonth(calDate.getMonth()+dir);renderCalendar();}
+function changeDay(dir){selectedDate.setDate(selectedDate.getDate()+dir);calDate=new Date(selectedDate);renderCalendar();renderTasks();document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate);}
 
-function handleNoteKey(e){
-  if(e.ctrlKey && e.key==='Enter'){ e.preventDefault(); addNote(); }
-}
-function renderNoteColorRow(targetId, currentColor, onChangeFn){
-  const row=document.getElementById(targetId); if(!row) return; row.innerHTML='';
-  COLORS.forEach((c,i)=>{ const btn=document.createElement('div'); btn.className='note-cdot'+(i===currentColor?' active':''); btn.style.background=c; btn.onclick=()=>{ onChangeFn(i); renderNoteColorRow(targetId,i,onChangeFn); }; row.appendChild(btn); });
-}
-function addNote(){
-  const title=document.getElementById('noteTitleInput').value.trim(), body=document.getElementById('noteBodyInput').value.trim(); if(!title&&!body) return;
-  notes.unshift({id:Date.now(),title:title||'Без названия',body,color:noteColor,flags:{...newNoteFlags}});
-  document.getElementById('noteTitleInput').value=''; document.getElementById('noteBodyInput').value='';
-  newNoteFlags={urgent:false,vp:false};
-  document.getElementById('noteUrgentToggle').className='flag-toggle urgent-toggle';
-  document.getElementById('noteVpToggle').className='flag-toggle vp-toggle';
-  save(); renderNotes();
-}
-function deleteNote(id){ notes=notes.filter(n=>n.id!==id); save(); renderNotes(); }
-function openEditNote(id){
-  const n=notes.find(n=>n.id===id); if(!n) return;
-  editNoteId=id; editNoteColor=n.color||0; editNoteFlags={...(n.flags||{})};
-  document.getElementById('editNoteTitle').value=n.title;
-  document.getElementById('editNoteBody').value=n.body;
-  renderNoteColorRow('editNoteColorRow', editNoteColor, i=>{ editNoteColor=i; });
-  renderEditNoteFlags();
-  document.getElementById('noteModal').classList.add('open');
-}
-function renderEditNoteFlags(){
-  const row=document.getElementById('editNoteFlagsRow'); row.innerHTML='';
-  const u=document.createElement('div'); u.className='flag-toggle urgent-toggle'+(editNoteFlags.urgent?' active':''); u.innerHTML='🔥 Важное'; u.onclick=()=>{ editNoteFlags.urgent=!editNoteFlags.urgent; renderEditNoteFlags(); }; row.appendChild(u);
-  const v=document.createElement('div'); v.className='flag-toggle vp-toggle'+(editNoteFlags.vp?' active':''); v.innerHTML='👤 ВП'; v.onclick=()=>{ editNoteFlags.vp=!editNoteFlags.vp; renderEditNoteFlags(); }; row.appendChild(v);
-}
-function saveEditNote(){
-  const n=notes.find(n=>n.id===editNoteId); if(!n) return;
-  n.title=document.getElementById('editNoteTitle').value; n.body=document.getElementById('editNoteBody').value;
-  n.color=editNoteColor; n.flags={...editNoteFlags};
-  save(); renderNotes(); closeModal('noteModal');
-}
-function renderNotes(){
-  const el=document.getElementById('notesList');
-  if(!notes.length){el.innerHTML='<div class="empty-msg" style="grid-column:1/-1">Заметок пока нет</div>';return;}
-  el.innerHTML='';
-  notes.forEach(n=>{
-    const flags=n.flags||{};
-    const card=document.createElement('div'); card.className=`note-card c${n.color||0}`;
-    card.innerHTML=`<button class="note-del" onclick="event.stopPropagation();deleteNote(${n.id})">×</button>${makeFlagHtml(flags)}<span class="note-title">${esc(n.title)}</span><span class="note-preview">${esc(n.body)}</span>`;
-    card.onclick=()=>openEditNote(n.id); el.appendChild(card);
-  });
-}
+async function addTask(){const inp=document.getElementById('taskInput'),text=inp.value.trim();if(!text)return;const key=dk(selectedDate);if(!tasks[key])tasks[key]=[];const id=uid();const task={id,text,done:false,overdue:false,flags:{...newTaskFlags},dateKey:key,createdAt:Date.now()};tasks[key].push(task);inp.value='';newTaskFlags={urgent:false,vp:false};document.getElementById('taskUrgentToggle').className='flag-toggle urgent-toggle';document.getElementById('taskVpToggle').className='flag-toggle vp-toggle';renderTasks();renderCalendar();await fbSave('tasks',id,task);}
+async function toggleTask(key,id){const t=tasks[key]?.find(t=>t.id===id);if(!t)return;t.done=!t.done;renderTasks();await fbSave('tasks',id,t);}
+async function deleteTask(key,id){tasks[key]=(tasks[key]||[]).filter(t=>t.id!==id);renderTasks();renderCalendar();await fbDelete('tasks',id);}
+function renderTasks(){const key=dk(selectedDate),el=document.getElementById('tasksList'),all=tasks[key]||[];if(!all.length){el.innerHTML='<div class="empty-msg">Задач нет — введите и нажмите Enter!</div>';return;}el.innerHTML='';const ov=all.filter(t=>t.overdue&&!t.done),reg=all.filter(t=>!t.overdue);if(ov.length){const l=document.createElement('div');l.className='group-lbl red';l.textContent='⚠️ Не выполнено с прошлых дней';el.appendChild(l);ov.forEach(t=>el.appendChild(mkTask(key,t)));if(reg.length){const l2=document.createElement('div');l2.className='group-lbl';l2.textContent='На сегодня';el.appendChild(l2);}}reg.forEach(t=>el.appendChild(mkTask(key,t)));}
+function mkTask(key,t){const flags=t.flags||{};let cls='task-item';if(t.overdue&&!t.done)cls+=' overdue';else if(flags.urgent)cls+=' is-urgent';else if(flags.vp)cls+=' is-vp';const div=document.createElement('div');div.className=cls;const cb=document.createElement('div');cb.className='task-cb'+(t.done?' done':'');cb.innerHTML=t.done?'✓':'';cb.onclick=()=>toggleTask(key,t.id);const info=document.createElement('div');info.className='task-info';const topRow=document.createElement('div');topRow.className='task-top-row';const span=document.createElement('span');span.className='task-text'+(t.done?' done':'');span.textContent=t.text;topRow.appendChild(span);const fh=makeTaskFlagHtml(flags);if(fh){const tmp=document.createElement('div');tmp.innerHTML=fh;Array.from(tmp.children).forEach(c=>topRow.appendChild(c));}info.appendChild(topRow);if(t.overdue&&t.fromDate){const b=document.createElement('div');b.className='task-from';b.textContent='Было: '+fmtShort(t.fromDate);info.appendChild(b);}const del=document.createElement('button');del.className='task-del';del.innerHTML='×';del.onclick=()=>deleteTask(key,t.id);div.appendChild(cb);div.appendChild(info);div.appendChild(del);return div;}
 
-function openStickerModal(idx){
-  editStIdx=idx!==undefined?idx:null; const s=idx!==undefined?stickers[idx]:null;
-  document.getElementById('stModalTitle').textContent=s?'Редактировать стикер':'Новый стикер';
-  document.getElementById('stTitle').value=s?s.title:''; document.getElementById('stBody').value=s?s.body:'';
-  stColor=s?(s.color||0):0; stFlags={urgent:!!(s?.flags?.urgent),vp:!!(s?.flags?.vp)};
-  renderStColors(); renderStFlags(); document.getElementById('stickerModal').classList.add('open');
-}
-function renderStColors(){ const row=document.getElementById('stColorRow'); row.innerHTML=''; COLORS.forEach((c,i)=>{ const btn=document.createElement('div'); btn.className='cdot'+(i===stColor?' active':''); btn.style.background=c; btn.onclick=()=>{stColor=i;renderStColors();}; row.appendChild(btn); }); }
-function renderStFlags(){
-  const row=document.getElementById('stFlagsRow'); row.innerHTML='';
-  const u=document.createElement('div'); u.className='flag-toggle urgent-toggle'+(stFlags.urgent?' active':''); u.innerHTML='🔥 Важное'; u.onclick=()=>{stFlags.urgent=!stFlags.urgent;renderStFlags();}; row.appendChild(u);
-  const v=document.createElement('div'); v.className='flag-toggle vp-toggle'+(stFlags.vp?' active':''); v.innerHTML='👤 ВП'; v.onclick=()=>{stFlags.vp=!stFlags.vp;renderStFlags();}; row.appendChild(v);
-}
-function saveSticker(){ const title=document.getElementById('stTitle').value.trim(), body=document.getElementById('stBody').value.trim(); if(!title&&!body) return; const obj={title:title||'Стикер',body,color:stColor,flags:{...stFlags}}; if(editStIdx!==null) stickers[editStIdx]=obj; else stickers.unshift(obj); save(); renderStickers(); closeModal('stickerModal'); }
-function deleteSticker(idx){ stickers.splice(idx,1); save(); renderStickers(); }
-function renderStickers(){ const el=document.getElementById('stickersList'); if(!stickers.length){el.innerHTML='<div style="font-size:11px;color:var(--text3);grid-column:1/-1">Стикеров пока нет</div>';return;} el.innerHTML=''; stickers.forEach((s,i)=>{ const flags=s.flags||{}; const card=document.createElement('div'); card.className=`sticker c${s.color||0}`; card.innerHTML=`<button class="st-del" onclick="event.stopPropagation();deleteSticker(${i})">×</button>${makeFlagHtml(flags)}<span class="st-title">${esc(s.title)}</span><span class="st-body">${esc(s.body)}</span>`; card.onclick=()=>openStickerModal(i); el.appendChild(card); }); }
+function handleNoteKey(e){if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();addNote();}}
+function renderNoteColorRow(targetId,currentColor,onChangeFn){const row=document.getElementById(targetId);if(!row)return;row.innerHTML='';COLORS.forEach((c,i)=>{const btn=document.createElement('div');btn.className='note-cdot'+(i===currentColor?' active':'');btn.style.background=c;btn.onclick=()=>{onChangeFn(i);renderNoteColorRow(targetId,i,onChangeFn);};row.appendChild(btn);});}
+async function addNote(){const title=document.getElementById('noteTitleInput').value.trim(),body=document.getElementById('noteBodyInput').value.trim();if(!title&&!body)return;const id=uid();const note={id,title:title||'Без названия',body,color:noteColor,flags:{...newNoteFlags},createdAt:Date.now()};notes.unshift(note);document.getElementById('noteTitleInput').value='';document.getElementById('noteBodyInput').value='';newNoteFlags={urgent:false,vp:false};document.getElementById('noteUrgentToggle').className='flag-toggle urgent-toggle';document.getElementById('noteVpToggle').className='flag-toggle vp-toggle';renderNotes();await fbSave('notes',id,note);}
+async function deleteNote(id){notes=notes.filter(n=>n.id!==id);renderNotes();await fbDelete('notes',id);}
+function openEditNote(id){const n=notes.find(n=>n.id===id);if(!n)return;editNoteId=id;editNoteColor=n.color||0;editNoteFlags={...(n.flags||{})};document.getElementById('editNoteTitle').value=n.title;document.getElementById('editNoteBody').value=n.body;renderNoteColorRow('editNoteColorRow',editNoteColor,i=>{editNoteColor=i;});renderEditNoteFlags();document.getElementById('noteModal').classList.add('open');}
+function renderEditNoteFlags(){const row=document.getElementById('editNoteFlagsRow');row.innerHTML='';const u=document.createElement('div');u.className='flag-toggle urgent-toggle'+(editNoteFlags.urgent?' active':'');u.innerHTML='🔥 Важное';u.onclick=()=>{editNoteFlags.urgent=!editNoteFlags.urgent;renderEditNoteFlags();};row.appendChild(u);const v=document.createElement('div');v.className='flag-toggle vp-toggle'+(editNoteFlags.vp?' active':'');v.innerHTML='👤 ВП';v.onclick=()=>{editNoteFlags.vp=!editNoteFlags.vp;renderEditNoteFlags();};row.appendChild(v);}
+async function saveEditNote(){const n=notes.find(n=>n.id===editNoteId);if(!n)return;n.title=document.getElementById('editNoteTitle').value;n.body=document.getElementById('editNoteBody').value;n.color=editNoteColor;n.flags={...editNoteFlags};renderNotes();closeModal('noteModal');await fbSave('notes',n.id,n);}
+function renderNotes(){const el=document.getElementById('notesList');if(!notes.length){el.innerHTML='<div class="empty-msg" style="grid-column:1/-1">Заметок пока нет</div>';return;}el.innerHTML='';notes.forEach(n=>{const flags=n.flags||{};const card=document.createElement('div');card.className=`note-card c${n.color||0}`;card.innerHTML=`<button class="note-del" onclick="event.stopPropagation();deleteNote('${n.id}')">×</button>${makeFlagHtml(flags)}<span class="note-title">${esc(n.title)}</span><span class="note-preview">${esc(n.body)}</span>`;card.onclick=()=>openEditNote(n.id);el.appendChild(card);});}
 
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function openStickerModal(idx){editStIdx=idx!==undefined?idx:null;const s=idx!==undefined?stickers[idx]:null;document.getElementById('stModalTitle').textContent=s?'Редактировать стикер':'Новый стикер';document.getElementById('stTitle').value=s?s.title:'';document.getElementById('stBody').value=s?s.body:'';stColor=s?(s.color||0):0;stFlags={urgent:!!(s?.flags?.urgent),vp:!!(s?.flags?.vp)};renderStColors();renderStFlags();document.getElementById('stickerModal').classList.add('open');}
+function renderStColors(){const row=document.getElementById('stColorRow');row.innerHTML='';COLORS.forEach((c,i)=>{const btn=document.createElement('div');btn.className='cdot'+(i===stColor?' active':'');btn.style.background=c;btn.onclick=()=>{stColor=i;renderStColors();};row.appendChild(btn);});}
+function renderStFlags(){const row=document.getElementById('stFlagsRow');row.innerHTML='';const u=document.createElement('div');u.className='flag-toggle urgent-toggle'+(stFlags.urgent?' active':'');u.innerHTML='🔥 Важное';u.onclick=()=>{stFlags.urgent=!stFlags.urgent;renderStFlags();};row.appendChild(u);const v=document.createElement('div');v.className='flag-toggle vp-toggle'+(stFlags.vp?' active':'');v.innerHTML='👤 ВП';v.onclick=()=>{stFlags.vp=!stFlags.vp;renderStFlags();};row.appendChild(v);}
+async function saveSticker(){const title=document.getElementById('stTitle').value.trim(),body=document.getElementById('stBody').value.trim();if(!title&&!body)return;const obj={title:title||'Стикер',body,color:stColor,flags:{...stFlags},createdAt:Date.now()};if(editStIdx!==null){const id=stickers[editStIdx].id;obj.id=id;stickers[editStIdx]=obj;await fbSave('stickers',id,obj);}else{const id=uid();obj.id=id;stickers.unshift(obj);await fbSave('stickers',id,obj);}renderStickers();closeModal('stickerModal');}
+async function deleteSticker(idx){const id=stickers[idx].id;stickers.splice(idx,1);renderStickers();await fbDelete('stickers',id);}
+function renderStickers(){const el=document.getElementById('stickersList');if(!stickers.length){el.innerHTML='<div style="font-size:11px;color:var(--text3);grid-column:1/-1">Стикеров пока нет</div>';return;}el.innerHTML='';stickers.forEach((s,i)=>{const flags=s.flags||{};const card=document.createElement('div');card.className=`sticker c${s.color||0}`;card.innerHTML=`<button class="st-del" onclick="event.stopPropagation();deleteSticker(${i})">×</button>${makeFlagHtml(flags)}<span class="st-title">${esc(s.title)}</span><span class="st-body">${esc(s.body)}</span>`;card.onclick=()=>openStickerModal(i);el.appendChild(card);});}
+
+function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
 renderHeader();
 document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate);
-renderCalendar(); renderTasks(); renderNotes(); renderStickers();
-renderNoteColorRow('noteColorRow', noteColor, i=>{ noteColor=i; });
-checkRollover();
+renderCalendar();
+renderNoteColorRow('noteColorRow',noteColor,i=>{noteColor=i;});
+loadAll();
 </script>
 </body>
 </html>

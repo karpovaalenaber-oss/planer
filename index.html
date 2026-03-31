@@ -35,7 +35,6 @@
   .main-area { display: flex; flex-direction: column; gap: 16px; }
   .card { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
 
-  /* CALENDAR */
   .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .cal-header .month-name { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
   .cal-nav { display: flex; gap: 4px; }
@@ -52,7 +51,6 @@
   .cal-day.today.has-tasks::after, .cal-day.selected.has-tasks::after { background:white; }
   .cal-day.has-overdue::after { background: var(--red) !important; }
 
-  /* STICKERS */
   .sec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .sec-header h2 { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 600; }
   .btn-sm { padding: 4px 10px; background: none; border: 1.5px dashed var(--border); border-radius: 7px; cursor: pointer; font-family: 'Manrope', sans-serif; font-size: 11px; color: var(--text3); transition: all 0.15s; }
@@ -69,12 +67,10 @@
   .sticker.c2{background:#E8F0FD;border-color:#90A8E8;} .sticker.c3{background:#FDE8E8;border-color:#E89090;}
   .sticker.c4{background:#F3E8FD;border-color:#C890E8;}
 
-  /* FLAGS / BADGES */
   .flag { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.3px; }
   .flag.urgent { background: var(--urgent); color: white; }
   .flag.vp { background: var(--vp); color: white; }
 
-  /* TASKS */
   .tasks-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
   .tasks-top h2 { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 600; }
   .date-nav { display: flex; align-items: center; gap: 6px; }
@@ -115,7 +111,6 @@
   .task-del:hover { color: #e05; }
   .empty-msg { color: var(--text3); font-size: 12px; padding: 6px 0; }
 
-  /* NOTES */
   .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-bottom: 12px; }
   .note-card { border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.5; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; border: 1px solid; position: relative; }
   .note-card.c0{background:#FFF4CC;border-color:#E8D078;} .note-card.c1{background:#E8F5EC;border-color:#7BC47F;}
@@ -143,7 +138,6 @@
   .save-btn:hover { background: var(--accent2); }
   .input-hint { font-size: 10px; color: var(--text3); margin-top: 5px; }
 
-  /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: white; border-radius: var(--radius); padding: 26px; width: 440px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
@@ -202,7 +196,6 @@
   </div>
 
   <div class="main-area">
-    <!-- TASKS -->
     <div class="card">
       <div class="tasks-top">
         <h2>Задачи</h2>
@@ -225,7 +218,6 @@
       <div id="tasksList"></div>
     </div>
 
-    <!-- NOTES -->
     <div class="card">
       <div class="sec-header" style="margin-bottom:12px">
         <h2>Заметки</h2>
@@ -248,7 +240,6 @@
   </div>
 </div>
 
-<!-- Sticker Modal -->
 <div class="modal-overlay" id="stickerModal">
   <div class="modal">
     <h3 id="stModalTitle">Новый стикер</h3>
@@ -263,7 +254,6 @@
   </div>
 </div>
 
-<!-- Note Edit Modal -->
 <div class="modal-overlay" id="noteModal">
   <div class="modal">
     <h3>Редактировать заметку</h3>
@@ -291,10 +281,8 @@ let stColor      = 0;
 let noteColor    = 0;
 let rolloverPending = [];
 
-// current flags for new task/note
 let newTaskFlags = { urgent: false, vp: false };
 let newNoteFlags = { urgent: false, vp: false };
-// flags for edit modal
 let editNoteColor = 0;
 let editNoteFlags = { urgent: false, vp: false };
 let stFlags = { urgent: false, vp: false };
@@ -324,7 +312,6 @@ function renderHeader(){
   const s=days[d.getDay()]; document.getElementById('todayBadge').textContent=s.charAt(0).toUpperCase()+s.slice(1)+', '+d.getDate()+' '+mon[d.getMonth()];
 }
 
-// ---- FLAGS ----
 function toggleTaskFlag(f){
   newTaskFlags[f]=!newTaskFlags[f];
   document.getElementById('taskUrgentToggle').className='flag-toggle urgent-toggle'+(newTaskFlags.urgent?' active':'');
@@ -348,7 +335,6 @@ function makeTaskFlagHtml(flags){
   return h;
 }
 
-// ---- ROLLOVER ----
 function checkRollover(){
   const todayKey=dk(new Date()), today=new Date(); today.setHours(0,0,0,0); rolloverPending=[];
   Object.keys(tasks).forEach(key=>{ if(key===todayKey) return; const d=parsedk(key); d.setHours(0,0,0,0); if(d<today) tasks[key].filter(t=>!t.done).forEach(t=>rolloverPending.push({...t,fromDate:key})); });
@@ -362,7 +348,6 @@ function doRollover(){
 }
 function dismissRollover(){ document.getElementById('rolloverBanner').style.display='none'; rolloverPending=[]; }
 
-// ---- CALENDAR ----
 function renderCalendar(){
   document.getElementById('monthName').textContent=fmtMonth(calDate);
   const grid=document.getElementById('calGrid'); grid.innerHTML='';
@@ -388,7 +373,6 @@ function addCDay(grid,d,other,today,sel){
 function changeMonth(dir){ calDate.setMonth(calDate.getMonth()+dir); renderCalendar(); }
 function changeDay(dir){ selectedDate.setDate(selectedDate.getDate()+dir); calDate=new Date(selectedDate); renderCalendar(); renderTasks(); document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate); }
 
-// ---- TASKS ----
 function addTask(){
   const inp=document.getElementById('taskInput'), text=inp.value.trim(); if(!text) return;
   const key=dk(selectedDate); if(!tasks[key]) tasks[key]=[];
@@ -427,7 +411,6 @@ function mkTask(key,t){
   div.appendChild(cb); div.appendChild(info); div.appendChild(del); return div;
 }
 
-// ---- NOTES ----
 function handleNoteKey(e){
   if(e.ctrlKey && e.key==='Enter'){ e.preventDefault(); addNote(); }
 }
@@ -477,7 +460,6 @@ function renderNotes(){
   });
 }
 
-// ---- STICKERS ----
 function openStickerModal(idx){
   editStIdx=idx!==undefined?idx:null; const s=idx!==undefined?stickers[idx]:null;
   document.getElementById('stModalTitle').textContent=s?'Редактировать стикер':'Новый стикер';
@@ -498,7 +480,6 @@ function renderStickers(){ const el=document.getElementById('stickersList'); if(
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
-// ---- BOOT ----
 renderHeader();
 document.getElementById('selectedDateLabel').textContent=fmtDate(selectedDate);
 renderCalendar(); renderTasks(); renderNotes(); renderStickers();

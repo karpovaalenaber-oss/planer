@@ -151,6 +151,7 @@
 </style>
 </head>
 <body>
+
 <div class="header">
   <h1>Мой рабочий планер</h1>
   <div class="header-right">
@@ -161,6 +162,7 @@
     <span class="today-badge" id="todayBadge"></span>
   </div>
 </div>
+
 <div class="rollover-banner" id="rolloverBanner" style="display:none">
   <div class="rb-text">⚠️ Есть <b id="rolloverCount">0</b> невыполненных задач из прошлых дней</div>
   <div class="rb-btns">
@@ -168,6 +170,7 @@
     <button class="rb-ok" onclick="doRollover()">Перенести на сегодня</button>
   </div>
 </div>
+
 <div class="layout">
   <div class="left-col">
     <div class="card">
@@ -190,6 +193,7 @@
       </div>
     </div>
   </div>
+
   <div class="main-area">
     <div class="card">
       <div class="tasks-top">
@@ -212,27 +216,29 @@
       </div>
       <div id="tasksList"></div>
     </div>
-<div class="card">
-  <div class="sec-header" style="margin-bottom:12px">
-    <h2>Заметки</h2>
-  </div>
-  <div class="notes-grid" id="notesList"></div>
-  <div class="note-input-area">
-    <input class="note-title-input" id="noteTitleInput" placeholder="Заголовок заметки..." onkeydown="handleNoteKey(event)">
-    <textarea class="note-body-input" id="noteBodyInput" placeholder="Текст заметки..." onkeydown="handleNoteKey(event)"></textarea>
-    <div class="note-input-bottom">
-      <div class="note-left-controls">
-        <div class="note-color-row" id="noteColorRow"></div>
-        <div class="flag-toggle urgent-toggle" id="noteUrgentToggle" onclick="toggleNoteFlag('urgent')">🔥 Важное</div>
-        <div class="flag-toggle vp-toggle" id="noteVpToggle" onclick="toggleNoteFlag('vp')">👤 ВП</div>
+
+    <div class="card">
+      <div class="sec-header" style="margin-bottom:12px">
+        <h2>Заметки</h2>
       </div>
-      <button class="save-btn" onclick="addNote()">Сохранить</button>
+      <div class="notes-grid" id="notesList"></div>
+      <div class="note-input-area">
+        <input class="note-title-input" id="noteTitleInput" placeholder="Заголовок заметки..." onkeydown="handleNoteKey(event)">
+        <textarea class="note-body-input" id="noteBodyInput" placeholder="Текст заметки..." onkeydown="handleNoteKey(event)"></textarea>
+        <div class="note-input-bottom">
+          <div class="note-left-controls">
+            <div class="note-color-row" id="noteColorRow"></div>
+            <div class="flag-toggle urgent-toggle" id="noteUrgentToggle" onclick="toggleNoteFlag('urgent')">🔥 Важное</div>
+            <div class="flag-toggle vp-toggle" id="noteVpToggle" onclick="toggleNoteFlag('vp')">👤 ВП</div>
+          </div>
+          <button class="save-btn" onclick="addNote()">Сохранить</button>
+        </div>
+        <div class="input-hint">Ctrl+Enter чтобы сохранить заметку</div>
+      </div>
     </div>
-    <div class="input-hint">Ctrl+Enter чтобы сохранить заметку</div>
   </div>
 </div>
-  </div>
-</div>
+
 <div class="modal-overlay" id="stickerModal">
   <div class="modal">
     <h3 id="stModalTitle">Новый стикер</h3>
@@ -246,6 +252,7 @@
     </div>
   </div>
 </div>
+
 <div class="modal-overlay" id="noteModal">
   <div class="modal">
     <h3>Редактировать заметку</h3>
@@ -259,6 +266,7 @@
     </div>
   </div>
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
@@ -313,7 +321,21 @@ function toggleNoteFlag(f){newNoteFlags[f]=!newNoteFlags[f];document.getElementB
 function makeFlagHtml(flags){let h='';if(flags?.urgent)h+=`<span class="flag urgent">🔥 Важное</span>`;if(flags?.vp)h+=`<span class="flag vp">👤 ВП</span>`;return h?`<div class="nflags">${h}</div>`:'';}
 function makeTaskFlagHtml(flags){let h='';if(flags?.urgent)h+=`<span class="flag urgent">🔥</span>`;if(flags?.vp)h+=`<span class="flag vp">ВП</span>`;return h;}
 
-function checkRollover(){const todayKey=dk(new Date()),today=new Date();today.setHours(0,0,0,0);rolloverPending=[];Object.keys(tasks).forEach(key=>{if(key===todayKey)return;const d=parsedk(key);d.setHours(0,0,0,0);if(d<today)tasks[key].filter(t=>!t.done).forEach(t=>rolloverPending.push({...t,fromDate:key}));});const b=document.getElementById('rolloverBanner');if(rolloverPending.length){document.getElementById('rolloverCount').textContent=rolloverPending.length;b.style.display='flex';}else b.style.display='none';}
+function checkRollover(){
+  const todayKey=dk(new Date()), today=new Date(); today.setHours(0,0,0,0); rolloverPending=[];
+  const todayTexts=new Set((tasks[todayKey]||[]).map(t=>t.text.trim().toLowerCase()));
+  Object.keys(tasks).forEach(key=>{
+    if(key===todayKey) return;
+    const d=parsedk(key); d.setHours(0,0,0,0);
+    if(d<today){
+      tasks[key].filter(t=>!t.done && !t.overdue).forEach(t=>{
+        if(!todayTexts.has(t.text.trim().toLowerCase())) rolloverPending.push({...t,fromDate:key});
+      });
+    }
+  });
+  const b=document.getElementById('rolloverBanner');
+  if(rolloverPending.length){ document.getElementById('rolloverCount').textContent=rolloverPending.length; b.style.display='flex'; } else b.style.display='none';
+}
 async function doRollover(){const todayKey=dk(new Date());if(!tasks[todayKey])tasks[todayKey]=[];for(const t of rolloverPending){if(tasks[t.fromDate])tasks[t.fromDate]=tasks[t.fromDate].filter(x=>x.id!==t.id);await fbDelete('tasks',t.id);const newId=uid();const newTask={id:newId,text:t.text,done:false,overdue:true,fromDate:t.fromDate,flags:t.flags||{},dateKey:todayKey,createdAt:Date.now()};tasks[todayKey].push(newTask);await fbSave('tasks',newId,newTask);}rolloverPending=[];document.getElementById('rolloverBanner').style.display='none';renderCalendar();renderTasks();}
 function dismissRollover(){document.getElementById('rolloverBanner').style.display='none';rolloverPending=[];}
 
